@@ -7,15 +7,19 @@ import kotlin.reflect.KProperty
 /**
  * TODO
  */
-public interface GLazy<T> : ReadOnlyProperty<Any?, T> {
-  public fun <N> convert(converter: (T) -> N): GLazy<N> = GLazyConverter(this, converter)
-}
+public interface GLazy<T> : ReadOnlyProperty<Any?, T>
 
-private open class GLazyConverter<T, N>(
-  private val source: GLazy<T>,
-  private val converter: (T) -> N,
-) : GLazy<N> {
-  override fun getValue(thisRef: Any?, property: KProperty<*>): N {
+/**
+ * TODO
+ */
+@GLazyDsl
+public fun <FROM, TO> GLazy<FROM>.convert(converter: (FROM) -> TO): GLazy<TO> = GLazyConverter(this, converter)
+
+private open class GLazyConverter<FROM, TO>(
+  private val source: GLazy<FROM>,
+  private val converter: (FROM) -> TO,
+) : GLazy<TO> {
+  override fun getValue(thisRef: Any?, property: KProperty<*>): TO {
     return source.getValue(thisRef, property).let(converter)
   }
 }
@@ -23,17 +27,21 @@ private open class GLazyConverter<T, N>(
 /**
  * TODO
  */
-public interface GMutableLazy<T> : GLazy<T>, ReadWriteProperty<Any?, T> {
-  public fun <N> convert(converter: (T) -> N, reverser: (N) -> T): GMutableLazy<N> =
-    GLazyReverser(this, converter, reverser)
-}
+public interface GMutableLazy<T> : GLazy<T>, ReadWriteProperty<Any?, T>
 
-private class GLazyReverser<T, N>(
-  private val source: GMutableLazy<T>,
-  converter: (T) -> N,
-  private val reverser: (N) -> T,
-) : GLazyConverter<T, N>(source, converter), GMutableLazy<N> {
-  override fun setValue(thisRef: Any?, property: KProperty<*>, value: N) {
+/**
+ * TODO
+ */
+@GLazyDsl
+public fun <FROM, TO> GMutableLazy<FROM>.convert(converter: (FROM) -> TO, reverser: (TO) -> FROM): GMutableLazy<TO> =
+  GLazyReverser(this, converter, reverser)
+
+private class GLazyReverser<FROM, TO>(
+  private val source: GMutableLazy<FROM>,
+  converter: (FROM) -> TO,
+  private val reverser: (TO) -> FROM,
+) : GLazyConverter<FROM, TO>(source, converter), GMutableLazy<TO> {
+  override fun setValue(thisRef: Any?, property: KProperty<*>, value: TO) {
     source.setValue(thisRef, property, reverser(value))
   }
 }

@@ -14,13 +14,15 @@ private open class GFallbackDelegate<T>(
 /**
  * TODO
  */
+@GLazyDsl
 public fun <T, F> GLazy<T?>.or(fallback: GLazy<F>, converter: (F) -> T): GLazy<T> =
-  GFallbackDelegate(this, fallback.convert(converter))
+  GFallbackDelegate(base = this, fallback = fallback.convert(converter))
 
 /**
  * TODO
  */
-public infix fun <T> GLazy<T?>.or(fallback: GLazy<T>): GLazy<T> = GFallbackDelegate(this, fallback)
+@GLazyDsl
+public infix fun <T> GLazy<T?>.or(fallback: GLazy<T>): GLazy<T> = or(fallback = fallback, converter = { it })
 
 private class GMutableFallbackDelegate<T>(
   private val base: GMutableLazy<T?>,
@@ -34,11 +36,13 @@ private class GMutableFallbackDelegate<T>(
 /**
  * TODO
  */
+@GLazyDsl
 public fun <T, F> GMutableLazy<T?>.or(fallback: GLazy<F>, converter: (F) -> T): GMutableLazy<T> =
-  GMutableFallbackDelegate(this, fallback.convert(converter))
+  GMutableFallbackDelegate(base = this, fallback = fallback.convert(converter))
 
 /**
  * TODO
  */
+@GLazyDsl
 public infix fun <T> GMutableLazy<T?>.or(fallback: GLazy<T>): GMutableLazy<T> =
-  GMutableFallbackDelegate(this, fallback)
+  or(fallback = fallback, converter = { it })

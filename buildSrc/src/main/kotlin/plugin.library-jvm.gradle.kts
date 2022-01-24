@@ -19,7 +19,12 @@ kotlin {
     test {
       dependencies {
         implementation("io.kotest:kotest-runner-junit5:_")
+        implementation("io.kotest:kotest-framework-datatest:_")
+        implementation("io.kotest:kotest-property:_")
         implementation("dev.petuska:klip:_")
+      }
+      languageSettings {
+        optIn("io.kotest.common.ExperimentalKotest")
       }
     }
   }
