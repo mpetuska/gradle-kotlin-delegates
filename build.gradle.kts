@@ -2,9 +2,10 @@ plugins {
   if (System.getenv("CI") == null) {
     id("plugin.git-hooks")
   }
-  id("plugin.library-mpp")
+  id("plugin.library-jvm")
+  id("plugin.publishing")
   id("plugin.publishing-nexus")
-  id("plugin.publishing-mpp")
+  `java-gradle-plugin`
 }
 
 gradleEnterprise {
@@ -14,10 +15,6 @@ gradleEnterprise {
   }
 }
 
-kotlin {
-  sourceSets {
-    commonMain {
-      dependencies { subprojects.filter { it.path.startsWith(":lib:") }.forEach { api(it) } }
-    }
-  }
+dependencies {
+  api(gradleApi())
 }

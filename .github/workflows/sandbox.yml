@@ -34,10 +34,10 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - runner: macos-11
-            shell: bash
-          - runner: windows-latest
-            shell: msys2 {0}
+#          - runner: macos-11
+#            shell: bash
+#          - runner: windows-latest
+#            shell: msys2 {0}
           - runner: ubuntu-latest
             shell: bash
     steps:
