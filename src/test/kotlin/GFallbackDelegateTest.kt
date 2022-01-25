@@ -25,8 +25,8 @@ class GFallbackDelegateTest : WordSpec({
       val project = ProjectBuilder.builder().build().also { prj ->
         expectedKey1?.let { prj.extensions.extraProperties[it] = it }
       }
-      val base: GLazy<String?> = project.gProperty(prefix)
-      val fallback: GLazy<String?> = gEnv(prefix, expectedKey2.asGetEnv())
+      val base: GLazy<String?> = project.lazyProperty(prefix)
+      val fallback: GLazy<String?> = lazyEnv(prefix, expectedKey2.asGetEnv())
       val target: String? by base or fallback
       target shouldBe (expectedKey1 ?: expectedKey2)
     }

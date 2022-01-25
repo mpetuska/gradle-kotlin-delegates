@@ -21,7 +21,7 @@ private class GEnvironmentDelegate<T>(
   }
 
   companion object {
-    internal val separators = Regex("[.\\- _]")
+    private val separators = Regex("[.\\- _]")
   }
 }
 
@@ -29,7 +29,7 @@ private class GEnvironmentDelegate<T>(
  * TODO
  */
 @GLazyDsl
-public fun <T> gEnv(
+public fun <T> lazyEnv(
   prefix: String? = null,
   getEnv: (String) -> String? = System::getenv,
   converter: (String) -> T,
@@ -39,7 +39,7 @@ public fun <T> gEnv(
  * TODO
  */
 @GLazyDsl
-public fun gEnv(
+public fun lazyEnv(
   prefix: String? = null,
   getEnv: (String) -> String? = System::getenv,
-): GLazy<String?> = gEnv(prefix = prefix, getEnv = getEnv, converter = { it })
+): GLazy<String?> = lazyEnv(prefix = prefix, getEnv = getEnv, converter = { it })

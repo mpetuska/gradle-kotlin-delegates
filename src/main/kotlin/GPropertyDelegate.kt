@@ -19,7 +19,7 @@ private class GPropertyDelegate<T>(
  * TODO
  */
 @GLazyDsl
-public fun <T> Project.gProperty(
+public fun <T> Project.lazyProperty(
   prefix: String? = null,
   converter: (String) -> T,
 ): GLazy<T?> = GPropertyDelegate(project = this, prefix = prefix, converter = converter)
@@ -28,6 +28,6 @@ public fun <T> Project.gProperty(
  * TODO
  */
 @GLazyDsl
-public fun Project.gProperty(
+public fun Project.lazyProperty(
   prefix: String? = null,
-): GLazy<String?> = gProperty(prefix = prefix, converter = { it })
+): GLazy<String?> = lazyProperty(prefix = prefix, converter = { it })

@@ -22,7 +22,7 @@ class GEnvDelegateTest : WordSpec({
     fun test(prefix: String?, expectedKey: String) {
       info("prefix=[$prefix], expectedKey=[$expectedKey]")
 
-      val target by gEnv(
+      val target by lazyEnv(
         prefix = prefix,
         getEnv = expectedKey.asGetEnv(),
         converter = { it }
