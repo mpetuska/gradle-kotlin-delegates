@@ -143,7 +143,7 @@ jobs:
           - name: Maven Central
             # Requires to manually release a new version on https://s01.oss.sonatype.org/#stagingRepositories
             # If you're brave, you could change it to `publishToSonatype closeAndReleaseSonatypeStagingRepository` to fully automate the release
-            tasks: publishToSonatype closeSonatypeStagingRepository
+            tasks: publishToSonatype closeAndReleaseSonatypeStagingRepository
             enabled: ${{ github.event.inputs.skipMavenCentral != 'y' }}
         os:
 #          - runner: macos-11
