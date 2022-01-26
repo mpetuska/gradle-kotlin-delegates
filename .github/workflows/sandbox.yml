@@ -58,19 +58,6 @@ jobs:
       - uses: actions/checkout@v2
         if: ${{ startsWith(matrix.os.runner, github.event.inputs.runner) }}
 
-      - name: Restore libmongoc cache
-        if: ${{ github.event.inputs.runAtEnd == 'true' && startsWith(matrix.os.runner, github.event.inputs.runner) }}
-        id: cache-libmongoc
-        uses: actions/cache@v2.1.7
-        with:
-          path: |
-            scripts/build
-          key: ${{ runner.os }}-libmongoc-${{ hashFiles('./scripts/*') }}
-
-      - name: Setup libmongoc
-        if: ${{ github.event.inputs.runAtEnd == 'true' && startsWith(matrix.os.runner, github.event.inputs.runner) }}
-        run: ./scripts/setup.sh
-
       - uses: actions/setup-java@v2
         if: ${{ startsWith(matrix.os.runner, github.event.inputs.runner) }}
         with:
