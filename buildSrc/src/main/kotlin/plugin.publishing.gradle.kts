@@ -11,7 +11,7 @@ plugins {
 tasks {
   register<Jar>("javadocJar") {
     dependsOn(dokkaHtml)
-    archiveClassifier.set("javadoc")
+    archiveClassifier by "javadoc"
     from(dokkaHtml.get().outputDirectory)
   }
   withType<Jar> {
