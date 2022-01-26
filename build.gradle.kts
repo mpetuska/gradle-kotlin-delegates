@@ -3,7 +3,7 @@ plugins {
     id("plugin.git-hooks")
   }
   id("plugin.library-jvm")
-  id("plugin.publishing")
+  id("plugin.publishing-jvm")
   id("plugin.publishing-nexus")
   `java-gradle-plugin`
 }
