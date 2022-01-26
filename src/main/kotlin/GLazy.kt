@@ -6,9 +6,9 @@ import kotlin.properties.ReadWriteProperty
 /**
  * TODO
  */
-public interface GLazy<T> : ReadOnlyProperty<Any?, T>
+public typealias GLazy<T> = ReadOnlyProperty<Any?, T>
 
 /**
  * TODO
  */
-public interface GMutableLazy<T> : GLazy<T>, ReadWriteProperty<Any?, T>
+public typealias GMutableLazy<T> = ReadWriteProperty<Any?, T>
