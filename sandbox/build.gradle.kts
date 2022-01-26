@@ -1,12 +1,11 @@
 plugins {
-  kotlin("jvm") version "1.6.10"
+  kotlin("jvm") version "1.5.32"
   application
 }
 
 repositories {
   mavenCentral()
   google()
-  maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
 }
 
 description = "Local consumer sandbox"
@@ -16,6 +15,14 @@ application {
 }
 
 dependencies {
-  implementation("dev.petuska:template-kmp-library")
-  testImplementation("dev.petuska:test")
+  implementation("dev.petuska:gradle-kotlin-delegates")
+  implementation(gradleApi())
+}
+
+tasks {
+  withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+      jvmTarget = "11"
+    }
+  }
 }

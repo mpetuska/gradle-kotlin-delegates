@@ -11,7 +11,7 @@ class GLazyTest : WordSpec({
       override fun getValue(thisRef: Any?, property: KProperty<*>): String = current
     }
     "be able to support conversion" {
-      val target by base.convert(converter = String::toBoolean)
+      val target by base.map(converter = String::toBoolean)
       base.current = "false"
       target shouldBe false
       base.current = "true"
@@ -27,7 +27,7 @@ class GLazyTest : WordSpec({
       }
     }
     "be able to support conversion and reversion" {
-      var target by base.convert(converter = String::toBoolean, reverser = Boolean::toString)
+      var target by base.map(converter = String::toBoolean, reverser = Boolean::toString)
       base.current = "false"
       target shouldBe false
       target = true

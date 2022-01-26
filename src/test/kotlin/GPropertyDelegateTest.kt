@@ -15,7 +15,7 @@ class GPropertyDelegateTest : WordSpec({
           it.extensions.extraProperties["target"] = "true"
         }
 
-        val target by project.gProperty()
+        val target by project.lazyProperty()
         target shouldBe "true"
       }
     }
@@ -29,7 +29,7 @@ class GPropertyDelegateTest : WordSpec({
             it.extensions.extraProperties[expectedKey] = "true"
           }
 
-          val target by project.gProperty(
+          val target by project.lazyProperty(
             prefix = prefix,
             converter = String::toBoolean
           )
@@ -39,7 +39,7 @@ class GPropertyDelegateTest : WordSpec({
           info("prefix=[$prefix]")
           val project = ProjectBuilder.builder().build()
 
-          val target by project.gProperty(
+          val target by project.lazyProperty(
             prefix = prefix,
           )
           target shouldBe null
