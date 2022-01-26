@@ -1,6 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import util.CI
-import util.isMainHost
 
 plugins {
   kotlin("jvm")

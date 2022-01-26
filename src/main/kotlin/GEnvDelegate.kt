@@ -2,6 +2,25 @@ package dev.petuska.gradle.kotlin.delegates
 
 import kotlin.reflect.KProperty
 
+/**
+ * TODO
+ */
+@GLazyDsl
+public fun <T> lazyEnv(
+  prefix: String? = null,
+  getEnv: (String) -> String? = System::getenv,
+  converter: (String) -> T,
+): GLazy<T?> = GEnvironmentDelegate(prefix = prefix, getEnv = getEnv, converter = converter)
+
+/**
+ * TODO
+ */
+@GLazyDsl
+public fun lazyEnv(
+  prefix: String? = null,
+  getEnv: (String) -> String? = System::getenv,
+): GLazy<String?> = lazyEnv(prefix = prefix, getEnv = getEnv, converter = { it })
+
 private class GEnvironmentDelegate<T>(
   prefix: String?,
   private val getEnv: (String) -> String?,
@@ -24,22 +43,3 @@ private class GEnvironmentDelegate<T>(
     private val separators = Regex("[.\\- _]")
   }
 }
-
-/**
- * TODO
- */
-@GLazyDsl
-public fun <T> lazyEnv(
-  prefix: String? = null,
-  getEnv: (String) -> String? = System::getenv,
-  converter: (String) -> T,
-): GLazy<T?> = GEnvironmentDelegate(prefix = prefix, getEnv = getEnv, converter = converter)
-
-/**
- * TODO
- */
-@GLazyDsl
-public fun lazyEnv(
-  prefix: String? = null,
-  getEnv: (String) -> String? = System::getenv,
-): GLazy<String?> = lazyEnv(prefix = prefix, getEnv = getEnv, converter = { it })

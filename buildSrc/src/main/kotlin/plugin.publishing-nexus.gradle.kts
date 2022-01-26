@@ -1,5 +1,3 @@
-import util.by
-
 plugins {
   id("plugin.common")
   id("io.github.gradle-nexus.publish-plugin")
