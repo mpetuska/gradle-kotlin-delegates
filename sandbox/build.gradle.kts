@@ -2,6 +2,23 @@ plugins {
   kotlin("jvm") version "1.5.32"
   application
 }
+apply<local.sandbox.TestPlugin>()
+version = "0.0.0"
+configure<local.sandbox.TestPlugin.TestExtension> {
+  println("ASSERTING TEST EXTENSION")
+  assert(baseProperty == null)
+  assert(orGradle == version)
+  assert(orSystem == System.getProperty("user.home"))
+  assert(orEnv == System.getenv("HOME"))
+  assert(orFallbackChain == orEnv)
+  baseProperty = "NEW"
+  assert(baseProperty == "NEW")
+  assert(orGradle == "NEW")
+  assert(orSystem == "NEW")
+  assert(orEnv == "NEW")
+  assert(orFallbackChain == "NEW")
+  println("ASSERTION SUCCESSFUL")
+}
 
 repositories {
   mavenCentral()
@@ -15,14 +32,5 @@ application {
 }
 
 dependencies {
-  implementation("dev.petuska:gradle-kotlin-delegates")
-  implementation(gradleApi())
-}
-
-tasks {
-  withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-      jvmTarget = "11"
-    }
-  }
+  testImplementation(kotlin("test"))
 }

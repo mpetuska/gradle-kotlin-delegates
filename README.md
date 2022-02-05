@@ -28,34 +28,53 @@ dependencies {
 
 ## Usage
 
-Here are some of the sample usages of the delegates provided by the project
+The main entrypoints are `WithGLazy` interface or its superset `WithGLazyFactory` scoping interfaces that you can apply
+to your extensions. Main use-case is intended for more convenient plugin extensions API, however chained providers can
+also be exposed in other gradle entities such as task outputs.
+
+Here are some of the sample usages of the delegates provided by the project:
 
 ```kotlin
-open class MyPluginExtension @Inject constructor(
-  objectFactory: ObjectFactory,
-  project: Project,
-) {
-  val value: Int by objectFactory.lazyVal {
-    // Do some calculations of the value to be executed at the last minute to construct the gradle Provider<T> instance
-    69
-  }
-  var configurationProperty: String by objectFactory.lazyVar("Default value to be used if nothing (or null) is set")
-  var lazyConfigurationProperty: Int by objectFactory.lazyVar {
-    "Default value to be used if nothing (or null) is set, will be computed on first interaction with the property"
-    420
-  }
+open class MyPluginExtension : WithGLazyFactory {
+  // Backing gradle property to be tracked
+  @get:Input
+  internal val _property: Property<String> = gMutableLazy<String>()
   
-  // Will look-up "my.custom.gradleProp" in gradle properties each time it's queried
-  val gradleProp: String? by project.lazyProperty(prefix = "my.custom")
+  // Internal source-of-truth which will resolve either a property set by user, environment variable `MY_PROPERTY`,
+  // system property `my.property`, gradle property `myProperty` or "DEFAULT" value, whichever comes first.
+  private val _chainedFallbackValue: String by _property orEnv "MY_PROPERTY" orSystemProperty "my.property" orGradleProperty "myProperty" or "DEFAULT"
   
-  // Will look-up any of ["MY_CUSTOM_ENVVAR", "MY_cUSTOm_ENVVAR", "MY_cUSTOm_envVar"] in environment properties each time it's queried
-  val envVar: String? by lazyEnv(prefix = "MY_cUSTOm")
+  // Equivalent to `_chainedFallbackValue`
+  private val _chainedFallbackValue2: String by _property.orEnvSystemGradlePropertyChain(
+    "MY_PROPERTY",
+    "my.property",
+    "myProperty"
+  ) or "DEFAULT"
   
-  // Will chain through each delegate until it finds a value each time it's queried, 
-  // stopping at constant "DEFAULT" if nothing is found beforehand
-  val chainedFallbacks: String by project.lazyProperty(prefix = "my.custom") or lazyEnv(prefix = "MY_cUSTOm") or "DEFAULT"
-  // Will chain through each delegate until it finds a value each time it's queried, 
-  // stopping after calculating default value by invoking constant lambda provider if nothing is found beforehand
-  val chainedFallbacks: String by project.lazyProperty(prefix = "my.custom") or lazyEnv(prefix = "MY_cUSTOm") or "DEFAULT"
+  // Similar to the above. Both, system and gradle keys will be inferred as "my.property"
+  private val _chainedFallbackValue3: String by _property orEnvSystemGradlePropertyChain "MY_PROPERTY" or "DEFAULT"
+  
+  // DSL property exposed to the consumer, backed by `_property`. 
+  // Makes use of implicit kotlin delegates to enable `value = "user-value"` syntax
+  var value: String? by _property
+  
+  // Strict DSL property exposed to the consumer, backed by `_property`. "Strict" mode prevents the end-user from setting non-nullable values.
+  // Makes use of implicit kotlin delegates to enable `value = "user-value"` syntax
+  var strictValue: String by _property.strict()
+}
+```
+
+The example above is using Strings for simplicity, but arbitrary types are supported everywhere with the use
+of `GLazy::convert` utility to map between them.
+
+```kotlin
+open class MyPluginExtension : WithGLazyFactory {
+  @get:Input
+  internal val _property: Property<Int> = gMutableLazy<Int>()
+  
+  @get:Input
+  internal val _anotherProperty: Property<String> = gMutableLazy<String>()
+  
+  internal val _chainedFallbackValue: Int by _property or _anotherProperty.convert(String::toInt)
 }
 ```
