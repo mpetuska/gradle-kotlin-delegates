@@ -10,7 +10,7 @@ for both, plugin authors and consumers trying to configure them.
 
 Certainly, `property = value` is much more appealing than `property.set(value)`.
 
-> The library was compiled against Gradle 7.3.3 & JDK 11
+> The library was compiled against Gradle 7.3.3 & JDK 8
 
 ## Installation
 
