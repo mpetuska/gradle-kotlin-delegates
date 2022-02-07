@@ -58,7 +58,7 @@ open class MyPluginExtension : WithGLazyFactory {
   // Makes use of implicit kotlin delegates to enable `value = "user-value"` syntax
   var value: String? by _property
   
-  // Strict DSL property exposed to the consumer, backed by `_property`. "Strict" mode prevents the end-user from setting non-nullable values.
+  // Strict DSL property exposed to the consumer, backed by `_property`. "Strict" mode prevents the end-user from setting nullable values.
   // Makes use of implicit kotlin delegates to enable `value = "user-value"` syntax
   var strictValue: String by _property.strict()
 }
