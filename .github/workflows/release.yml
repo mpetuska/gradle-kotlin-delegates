@@ -66,7 +66,7 @@ jobs:
         working-directory: sandbox
         run: ./gradlew check --scan
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
           name: publications-${{ runner.os }}
@@ -79,7 +79,7 @@ jobs:
         if: ${{ runner.os == 'Linux' }}
         run: ./gradlew dokkaHtml -Pversion=${VERSION//v} --scan
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: ${{ runner.os == 'Linux' }}
         with:
           name: dokka
